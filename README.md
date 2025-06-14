@@ -103,24 +103,32 @@ print(df_personality[duplicates])
 Output:
 ```
 Baris duplikat:
-      Time_spent_Alone  Stage_fear  Social_event_attendance  Going_outside  Drained_after_socializing  \
-47                  10           1                        1              2                          1
-217                  5           1                        2              0                          1
-...                ...         ...                      ...            ...                        ...
-2892                 9           1                        2              0                          1
-2895                 3           0                        7              6                          0
+[429 rows x 8 columns]
+```
+Berdasarkan pengecekan di atas, diketahui bahwa terdapat 429 baris yang terduplikat. Oleh karena itu, dilakukan penghapusan baris yang redundan tersebut.
 
-      Drained_after_socializing  Friends_circle_size  Post_frequency  Personality
-47                            1                    2               0    Introvert    
-217                           1                    2               0    Introvert     
-...                         ...                  ...             ...          ...    
-2892                          1                    1               2    Introvert   
-2895                          0                    6               6    Extrovert   
+```python
+df_personality = df_personality.drop_duplicates()
 ```
 
-3. dfad
+3. Pengecekan Outlier
+```python
+numeric_features = df_personality[df_personality.columns].select_dtypes(include=['number']).columns
 
+# Mengidentifikasi outliers menggunakan IQR
+Q1 = df_personality[numeric_features].quantile(0.25)
+Q3 = df_personality[numeric_features].quantile(0.75)
+IQR = Q3 - Q1
 
+# Menghapus Outlier sesuai perhitungan Kuartil
+# Filter dataframe untuk hanya menyimpan baris yang tidak mengandung outliers pada kolom numerik
+condition = ~((df_personality[numeric_features] < (Q1 - 1.5*IQR)) | (df_personality[numeric_features] > (Q3 + 1.5*IQR))).any(axis=1)
+df_filtered_numeric = df_personality.loc[condition, numeric_features]
+
+# Menggabungkan kembali dengan kolom kategorikal
+categorical_features = df_personality.select_dtypes(include=['object']).columns
+df_personality = pd.concat([df_filtered_numeric, df_personality.loc[condition, categorical_features]], axis=1)
+```
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
