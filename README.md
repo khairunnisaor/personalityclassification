@@ -38,22 +38,89 @@ Sumber dataset: [Extrovert vs. Introvert Behavior Data] (https://www.kaggle.com/
 Beberapa kegunaan dataset: Membuat model machine learning untuk prediksi kepribadian, menganalisa korelasi antara perilaku sosial dan kepribadian, membuat visualisasi tentang tren kebiasaan atau perilaku sosial individu, dan lain-lain.
 
 ### Variabel-variabel pada Extrovert vs. Introvert Behavior Data adalah sebagai berikut:
-    Kondisi Psikis
-    - Stage_fear: Memiliki demam panggung (Yes/No).
-    - Drained_after_socializing: Perasaan lelah setelah bersosialisasi (Yes/No).
+Kondisi Psikis
+- Stage_fear: Memiliki demam panggung (Yes/No).
+- Drained_after_socializing: Perasaan lelah setelah bersosialisasi (Yes/No).
 
-    Interaksi Sosial
-    - Time_spent_Alone: Jumlah jam yang dihabiskan sendirian dalam satu hari (0–11).
-    - Social_event_attendance: Frekuensi menghadiri acara sosial (0–10).
-    - Going_outside: Frekuensi bepergian keluar (0–7).
-    - Friends_circle_size: Jumlah teman dekat (0–15).
-    - Post_frequency: Frekuensi mengunggah sesuatu ke media sosial (0–10).
+Interaksi Sosial
+- Time_spent_Alone: Jumlah jam yang dihabiskan sendirian dalam satu hari (0–11).
+- Social_event_attendance: Frekuensi menghadiri acara sosial (0–10).
+- Going_outside: Frekuensi bepergian keluar (0–7).
+- Friends_circle_size: Jumlah teman dekat (0–15).
+- Post_frequency: Frekuensi mengunggah sesuatu ke media sosial (0–10).
 
-    Variabel Target
-    - Personality: Identifikasi kepribadian (Extrovert/Introvert).*
+Variabel Target
+- Personality: Identifikasi kepribadian (Extrovert/Introvert).
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
+### Mengecek Kondisi dan Eksplorasi Data
+1. Pengecekan dan Pengisian Nilai yang Hilang
+```python
+# Memeriksa jumlah nilai yang hilang di setiap kolom
+missing_values = df_personality.isnull().sum()
+missing_values[missing_values > 0]
+```
+| Variabel        | Jumlah Nilai Hilang |
+| --------------- |:-------------------:|
+| Time_spent_Alone | 63 |
+| Stage_fear | 73 |
+| Social_event_attendance | 62 |
+| Going_outside | 66 |
+| Drained_after_socializing | 52 |
+| Friends_circle_size | 77 |
+| Post_frequency | 65 |
+
+```python
+# Membuat fungsi pengisian nilai hilang menggunakan KNNImputer, untuk mengisi data hilang berdasarkan tetangga terdekatnya
+def imputeMissingValues(df, col):
+    imputer = KNNImputer(n_neighbors=2, weights="distance")
+    fill_na = imputer.fit_transform(df[col].values.reshape(-1,1)).astype(np.int64)
+    return fill_na
+
+# Mengubah variabel dengan tipe data kategori (Yes/No) menjadi angka (1/0) agar dapat dilakukan imputasi
+df_personality[['Stage_fear','Drained_after_socializing']] = df_personality[['Stage_fear','Drained_after_socializing']].apply(
+                                                                  lambda series: pd.Series(
+                                                                        LabelEncoder().fit_transform(series[series.notnull()]),
+                                                                        index=series[series.notnull()].index)
+                                                               )
+# Melakukan imputasi untuk mengisi nilai yang hilang
+df_personality['Time_spent_Alone'] = imputeMissingValues(df_personality, 'Time_spent_Alone')
+df_personality['Social_event_attendance'] = imputeMissingValues(df_personality, 'Social_event_attendance')
+df_personality['Going_outside'] = imputeMissingValues(df_personality, 'Going_outside')
+df_personality['Post_frequency'] = imputeMissingValues(df_personality, 'Post_frequency')
+df_personality['Friends_circle_size'] = imputeMissingValues(df_personality, 'Friends_circle_size')
+
+df_personality['Stage_fear'] = imputeMissingValues(df_personality, 'Stage_fear')
+df_personality['Drained_after_socializing'] = imputeMissingValues(df_personality, 'Drained_after_socializing')
+```
+2. Pengecekan Data Duplikat
+```python
+# Mengidentifikasi baris duplikat
+duplicates = df_personality.duplicated()
+
+print("Baris duplikat:")
+print(df_personality[duplicates])
+```
+Output:
+```
+Baris duplikat:
+      Time_spent_Alone  Stage_fear  Social_event_attendance  Going_outside  Drained_after_socializing  \
+47                  10           1                        1              2                          1
+217                  5           1                        2              0                          1
+...                ...         ...                      ...            ...                        ...
+2892                 9           1                        2              0                          1
+2895                 3           0                        7              6                          0
+
+      Drained_after_socializing  Friends_circle_size  Post_frequency  Personality
+47                            1                    2               0    Introvert    
+217                           1                    2               0    Introvert     
+...                         ...                  ...             ...          ...    
+2892                          1                    1               2    Introvert   
+2895                          0                    6               6    Extrovert   
+```
+
+3. dfad
+
+
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
