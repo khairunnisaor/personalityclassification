@@ -19,8 +19,8 @@ Referensi: Sari, N. P., Widodo, T., & Putra, K. A. (2020). Classification Algori
 
 ### Goals
 1. Mengembangkan metode identifikasi kepribadian yang lebih cepat dan bebas dari bias subjektif dibandingkan metode tradisional, juga dapat diterapkan pada jumlah individu yang besar tanpa kehilangan akurasi atau efisiensi.
-2. Menemukan metode machine learning terbaik untuk menghasilkan model yang optimal.
-
+2. Menemukan metode machine learning terbaik dari segi performa prediksi dan waktu pelatihan.
+   
 ### Solution statements
 1. Membangun data-driven prediction dengan model machine learning.
    * Menggunakan data perilaku interaksi sosial individu yang kuantitatif, bukan hasil survey kualitatif individu
@@ -30,14 +30,27 @@ Referensi: Sari, N. P., Widodo, T., & Putra, K. A. (2020). Classification Algori
    * Melakukan hyperparameter tuning untuk membangun model yang optimal
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai data yang Anda gunakan dalam proyek. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+Dataset ini berisi tentang data perilaku seseorang yang menggambarkan apakah individu tersebut memiliki kepribadian yang introvert atau extrovert. Berdasarkan data perilaku invidu yang kuantitatif, dataset ini dapat menjadi sumber daya yang berharga untuk psikolog dan peneliti dalam mempelajari dan mengeksplorasi bagaimana perilaku sosial dapat dieksplorasi untuk mengidentifikasi spektrum kepribadian manusia.
 
-Selanjutnya uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+Dataset ini terdiri dari 7 jenis kebiasaan dari 2.900 responden tentang kondisi mental dan cara mereka berinteraksi sosial, yang diukur dalam skala yang telah ditentukan.
+Sumber dataset: [Extrovert vs. Introvert Behavior Data] (https://www.kaggle.com/datasets/rakeshkapilavai/extrovert-vs-introvert-behavior-data)
 
-### Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+Beberapa kegunaan dataset: Membuat model machine learning untuk prediksi kepribadian, menganalisa korelasi antara perilaku sosial dan kepribadian, membuat visualisasi tentang tren kebiasaan atau perilaku sosial individu, dan lain-lain.
+
+### Variabel-variabel pada Extrovert vs. Introvert Behavior Data adalah sebagai berikut:
+    Kondisi Psikis
+    - Stage_fear: Memiliki demam panggung (Yes/No).
+    - Drained_after_socializing: Perasaan lelah setelah bersosialisasi (Yes/No).
+
+    Interaksi Sosial
+    - Time_spent_Alone: Jumlah jam yang dihabiskan sendirian dalam satu hari (0–11).
+    - Social_event_attendance: Frekuensi menghadiri acara sosial (0–10).
+    - Going_outside: Frekuensi bepergian keluar (0–7).
+    - Friends_circle_size: Jumlah teman dekat (0–15).
+    - Post_frequency: Frekuensi mengunggah sesuatu ke media sosial (0–10).
+
+    Variabel Target
+    - Personality: Identifikasi kepribadian (Extrovert/Introvert).*
 
 **Rubrik/Kriteria Tambahan (Opsional)**:
 - Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data atau exploratory data analysis.
