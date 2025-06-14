@@ -1,5 +1,5 @@
 # Laporan Proyek Machine Learning Terapan I - Oryza Khairunnisa
-Klasifikasi Kepribadian Introversi vs Extroversi menggunakan Metode Naive Bayes, Decision Tree, dan Support Vector Machine (SVM)
+Klasifikasi Kepribadian Introversi vs Extroversi menggunakan Metode Machine Learning Klasik
 
 ## Domain Proyek
 
@@ -13,32 +13,21 @@ Referensi: Sari, N. P., Widodo, T., & Putra, K. A. (2020). Classification Algori
 
 ## Business Understanding
 
-Pada bagian ini, kamu perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
-
 ### Problem Statements
-
-Menjelaskan pernyataan masalah latar belakang:
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+1. Bagaimana cara melakukan identifikasi kepribadian agar lebih efisien, objektif, dan dapat dikembangkan untuk skala yang lebih besar?
+2. Algoritma machine learning seperti apa yang dapat digunakan pada data perilaku dan menghasilkan model yang optimal?
 
 ### Goals
+1. Mengembangkan metode identifikasi kepribadian yang lebih cepat dan bebas dari bias subjektif dibandingkan metode tradisional, juga dapat diterapkan pada jumlah individu yang besar tanpa kehilangan akurasi atau efisiensi.
+2. Menemukan metode machine learning terbaik untuk menghasilkan model yang optimal.
 
-Menjelaskan tujuan dari pernyataan masalah:
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
-
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan juga goals yang diinginkan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Menambahkan bagian “Solution Statement” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
-
-    ### Solution statements
-    - Mengajukan 2 atau lebih solution statement. Misalnya, menggunakan dua atau lebih algoritma untuk mencapai solusi yang diinginkan atau melakukan improvement pada baseline model dengan hyperparameter tuning.
-    - Solusi yang diberikan harus dapat terukur dengan metrik evaluasi.
+### Solution statements
+1. Membangun data-driven prediction dengan model machine learning.
+   * Menggunakan data perilaku interaksi sosial individu yang kuantitatif, bukan hasil survey kualitatif individu
+   * Membangun model machine learning untuk melakukan prediksi kepribadian berdasarkan data perilaku kuantitatif
+2. Membandingkan performa dari 3 metode machine learning, berdasarkan kemampuan prediksi dan kecepatan pelatihan model untuk mengukur skalabilitas.
+   * Melakukan studi perbandingan metode machine learning untuk mendapatkan model terbaik
+   * Melakukan hyperparameter tuning untuk membangun model yang optimal
 
 ## Data Understanding
 Paragraf awal bagian ini menjelaskan informasi mengenai data yang Anda gunakan dalam proyek. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
