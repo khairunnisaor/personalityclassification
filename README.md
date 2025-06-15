@@ -322,39 +322,51 @@ Untuk dapat menghitung metrik akurasi, precision, recall, dan F1 score, terdapat
 Berdasarkan keempat nilai di atas, akurasi, precision, recall, dan F1 score dihitung dengan cara sebagai berikut:
 1. Akurasi
 <br>Akurasi mengukur proporsi total prediksi yang benar dari semua prediksi yang dibuat. Ini adalah metrik paling intuitif dan memberikan gambaran umum seberapa sering model membuat prediksi yang tepat.
-<br>Formula: Accuracy = (TP + TN) / (TP + TN + FP + FN)
+<br>**Formula:** Accuracy = (TP + TN) / (TP + TN + FP + FN)
 
 2. Presisi
 <br>Presisi mengukur proporsi positif yang benar dari semua kasus yang diprediksi sebagai positif. Dengan kata lain, dari semua yang diprediksi sebagai kelas positif, berapa banyak yang benar-benar positif. Ini menjawab pertanyaan: "Seberapa banyak prediksi positif saya yang memang benar?"
-<br>Formula: Precision = TP / (TP + FP)
+<br>**Formula:** Precision = TP / (TP + FP)
 
 3. Recall (Sensitivitas / Tingkat Keberhasilan)
 <br>Recall mengukur proporsi positif yang teridentifikasi dengan benar dari semua kasus positif aktual. Dengan kata lain, dari semua kasus yang seharusnya positif, berapa banyak yang berhasil ditemukan oleh model. Ini menjawab pertanyaan: "Seberapa banyak kasus positif yang sebenarnya berhasil ditemukan oleh model saya?"
-<br>Formula: Recall = TP / (TP + FN)
+<br>**Formula:** Recall = TP / (TP + FN)
 
 4. F1-Score
 <br>F1-Score adalah rata-rata harmonik dari Presisi dan Recall. Ini memberikan skor tunggal yang menyeimbangkan Presisi dan Recall. F1-Score tinggi menunjukkan bahwa model memiliki Presisi dan Recall yang baik secara bersamaan.
-<br>Formula: F1_Score = 2 ∗ (Precision ∗ Recall) / (Precision + Recall)
+<br>**Formula:** F1_Score = 2 ∗ (Precision ∗ Recall) / (Precision + Recall)
 
 Selain keempat metrik di atas, dilakukan juga perhitungan training time untuk mengukur skalabilitas model pada data yang lebih besar dan algoritma yang lebih kompleks.
 5. Training Time
 <br>Training time adalah waktu yang dibutuhkan model untuk melakukan pelatihan. 
-<br>Formula: Training time = start training time - end training time
+<br>**Formula:** Training time = start training time - end training time
+
+Berdasarkan metrik di atas, didapatkan hasil eksperimen baseline model dengan parameter default sebagai berikut:
+| Model        | Akurasi | Precision | Recall | F1-Score |
+| ------------ | ------- | --------- | ------ | -------- |
+| KNN          | 91.11   | 91.37     | 91.11  | 91.14    | 
+| SVM          | 92.53   | 92.80     | 92.53  | 92.55    |
+| NaiveBayes   | 92.32   | 92.57     | 92.32  | 92.35    |
+
+Lalu, dilakukan hyperparameter tuning dan hasil eksperimen dengan best parameter beserta waktu pelatihannya sebagai berikut:
+| Model             | Akurasi | Precision | Recall | F1-Score | Training Time (s) |
+| ----------------- | ------- | --------- | ------ | -------- | ----------------- |
+| Tuned-KNN         | 91.72   | 92.00     | 91.75  | 91.75    | 0.004474          | 
+| Tuned-SVM         | 92.53   | 92.80     | 92.53  | 92.55    | 0.083815          | 
+| Tuned-NaiveBayes  | 92.32   | 92.57     | 92.32  | 92.35    | 0.003291          | 
 
 
+Berdasarkan hasil eksperimen dalam membandingkan tiga algoritma machine learning klasik dan memanfaatkan hyperparameter tuning untuk memperoleh model optimal, didapatkan hasil yaitu:
+* Berdasarkan F1-Score dan Akurasi, model terbaik adalah model dengan algoritma SVM, dimana model ini sudah memiliki performa yang cukup baik sejak awal. Hal ini tercermin dari F1-Score sebesar 92.55 dengan baseline model dan tidak ada peningkatan yang signifikan setelah dilakukan hyperparameter tuning.
+* Hal yang sama juga terjadi pada model dengan Naive Bayes, dimana tidak ada peningkatan setelah dilakukan hyperparameter tuning. Hal ini mungkin terjadi karena parameter grid yang kurang luas atau metode best parameter search yang belum optimal. Kemungkinan lain adalah dibutuhkannya tahap preprocessing yang lebih baik, contohnya opsi ketika memperlakukan missing values dan melakukan data balancing untuk masing-masing kelas.
+* Algoritma KNN memiliki performa di bawah dua algoritma yang lain, namun terjadi sedikit peningkatan (+0.61) pada F1-Score setelah hyperparameter tuning.
+* Untuk menjawab skalabilitas proyek, diketahui bahwa model dengan performa paling cepat pada pelatihan adalah Naive Bayes, dengan waktu 0.0033s. Walaupun performa model dengan Naive Bayes berada pada peringkat kedua di bawah SVM, jelas bahwa bayes hampir 30 kali lebih cepat dari SVM. Dengan selisih waktu yang signifikan namun performa yang hanya berselisih 0.2 poin, dapat direkomendasikan bahwa ketika data jauh lebih besar (saat ini terdapat 2.4K baris data), Naive Bayes adalah win-win solution untuk kedua aspek.
+* KNN memiliki kecepatan yang hampir mirip degan Naive Bayes, namun performanya masih harus bersaing lebih baik lagi dengan Naive Bayes, juga dengan mempertimbangkan kekurangan KNN untuk studi kasus dengan karakteristik data yang kompleks.
 
 
+## Kesimpulan
+Proyek ini mendemonstrasikan proses tahapan prediksi kepribadian berdasarkan data kuantitatif individu dari kebiasaannya yang berhubungan dengan kegiatan bersosial. Dari eksperimen ini dapat diketahui bahwa proses prediksi kepribadian seseorang dapat dilakukan dengan melatih model machine learning yang optimal, tanpa harus melakukan survey kualitatif dan membutuhkan banyak waktu tenaga ahli dalam menarik kesimpulan kepribadian.
 
---------------------------------
-Pada bagian ini anda perlu menyebutkan metrik evaluasi yang digunakan. Lalu anda perlu menjelaskan hasil proyek berdasarkan metrik evaluasi yang digunakan.
-
-Sebagai contoh, Anda memiih kasus klasifikasi dan menggunakan metrik **akurasi, precision, recall, dan F1 score**. Jelaskan mengenai beberapa hal berikut:
-- Penjelasan mengenai metrik yang digunakan
-- Menjelaskan hasil proyek berdasarkan metrik evaluasi
-
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+Di antara KNN, SVM, dan Naive Bayes, model terbaik didapatkan dari melatih data dengan algoritma SVM. Namun, model dengan Naive Bayes adalah yang tercepat ketika dilihat dari segi waktu pelatihan model, tanpa mengorbankan performa model yang terlalu signifikan di bawah dua model yang lain. Oleh karena itu, proyek ini memperlihatkan bahwa algoritma terbaik untuk studi kasus ini adalah Naive Bayes, dengan performa model dan kecepatan yang sangat tinggi.
 
 
