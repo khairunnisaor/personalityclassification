@@ -53,7 +53,7 @@ Variabel Target
 - Personality: Identifikasi kepribadian (Extrovert/Introvert).
 
 ### Mengecek Kondisi dan Eksplorasi Data
-1. Pengecekan dan Pengisian Nilai yang Hilang
+1. Pengecekan dan Pengisian Nilai yang Hilang (missing values)
 ```python
 # Memeriksa jumlah nilai yang hilang di setiap kolom
 missing_values = df_personality.isnull().sum()
@@ -92,6 +92,7 @@ df_personality['Friends_circle_size'] = imputeMissingValues(df_personality, 'Fri
 df_personality['Stage_fear'] = imputeMissingValues(df_personality, 'Stage_fear')
 df_personality['Drained_after_socializing'] = imputeMissingValues(df_personality, 'Drained_after_socializing')
 ```
+
 2. Pengecekan Data Duplikat
 ```python
 # Mengidentifikasi baris duplikat
@@ -129,6 +130,56 @@ df_filtered_numeric = df_personality.loc[condition, numeric_features]
 categorical_features = df_personality.select_dtypes(include=['object']).columns
 df_personality = pd.concat([df_filtered_numeric, df_personality.loc[condition, categorical_features]], axis=1)
 ```
+
+4. Menampilkan informasi rangkuman data secara umum.
+```python
+df_personality.info()
+```
+Output:
+```
+<class 'pandas.core.frame.DataFrame'>
+Index: 2471 entries, 0 to 2899
+Data columns (total 8 columns):
+ #   Column                     Non-Null Count  Dtype 
+---  ------                     --------------  ----- 
+ 0   Time_spent_Alone           2471 non-null   int64 
+ 1   Stage_fear                 2471 non-null   int64 
+ 2   Social_event_attendance    2471 non-null   int64 
+ 3   Going_outside              2471 non-null   int64 
+ 4   Drained_after_socializing  2471 non-null   int64 
+ 5   Friends_circle_size        2471 non-null   int64 
+ 6   Post_frequency             2471 non-null   int64 
+ 7   Personality                2471 non-null   object
+dtypes: int64(7), object(1)
+memory usage: 173.7+ KB
+```
+Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation.
+
+### Exploratory Data Analysis
+Untuk mengetahui persebaran dan behavior dari data, dilakukan beberapa hal yaitu:
+
+1. Analisis Distribusi
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/distribution_updated.png)
+Diagram batang di atas menggambarkan distribusi data pada setiap kolom. Hampir seluruh distribusi variabel memiliki kecenderungan miring ke kanan (right-skewed), dimana lebih banyak nilai mendekati minimal. Sedangkan, saat dibandingkan frekuensi variabel target yang ditunjukkan pada grafik di bawah, hasilnya adalah lebih banyak data dengan label extrovert, walaupun ketidakseimbangannya tidak terlalu signifikan.
+
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/count_target.png)
+
+3. Analisis Bivariate
+Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/bivariate.png)
+
+Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
+
+Hal ini juga terlihat jelas pada correlation analisis di bawah. Terdapat tiga nilai yang dapat diketahui dari correlation table, yaitu:
+* nilai negatif: Semakin nilai antar dua variabel mendekati -1, artinya kedua variabel tersebut berkorelasi negatif atau terbalik.
+* nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
+* nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
+
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/corr.png)
+
+Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, dan `drained after socializing` memiliki korelasi yang positif satu sama lain, namun berkorelasi sangat negatif dengan variabel sisanya.
+
+
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
