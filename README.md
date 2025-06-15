@@ -165,7 +165,7 @@ Diagram batang di atas menggambarkan distribusi data pada setiap kolom. Hampir s
 ![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/count_target.png)
 
 3. Analisis Bivariate
-Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
+<br>Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
 ![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/bivariate.png)
 
 Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
@@ -185,7 +185,7 @@ Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, d
 Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
 
 1. Standarisasi atau Normalisasi Fitur
-Pada tahapan ini, dilakukan penyeragaman atau standarisasi skala variabel independen agar seluruh fitur memiliki nilai minimal dan nilai maksimal yang sama, sehingga tidak ada data yang terlalu tinggi atau terlalu rendah nilainya. Tahapan ini adalah langkah yang krusial dalam membangun model machine learning, karena tanpa fitur yang terstandarisasi, model akan susah mempelajari kesamaan pola yang ada dalam data.
+<br>Pada tahapan ini, dilakukan penyeragaman atau standarisasi skala variabel independen agar seluruh fitur memiliki nilai minimal dan nilai maksimal yang sama, sehingga tidak ada data yang terlalu tinggi atau terlalu rendah nilainya. Tahapan ini adalah langkah yang krusial dalam membangun model machine learning, karena tanpa fitur yang terstandarisasi, model akan susah mempelajari kesamaan pola yang ada dalam data.
 
 ```python
 # Memastikan hanya data dengan tipe numerikal yang akan diproses
@@ -198,7 +198,7 @@ df_data[numeric_features] = scaler.fit_transform(df_data[numeric_features])
 ```
 
 2. Data Splitting
-Setelah memastikan bahwa fitur independen berada dalam skala yang serupa, dilakukan langkah terakhir sebelum melatih model machine learning, yaitu data splitting. Tahapan ini dilakukan untuk membagi data menjadi dua, yaitu train dan test set. Train set akan digunakan untuk tahapan pelatihan model, sedangkan test set akan digunakan untuk evaluasi model. Hal ini dilakukan agar model yang dihasilkan objektif, dimana model harus menghasilkan prediksi yang akurat dan tidak mengetahui "jawaban" dari data test. Pada tahap ini, dipilih 80% dari keseluruhan data menjadi data pelatihan dan 20% sisanya digunakan untuk evaluasi.
+<br>Setelah memastikan bahwa fitur independen berada dalam skala yang serupa, dilakukan langkah terakhir sebelum melatih model machine learning, yaitu data splitting. Tahapan ini dilakukan untuk membagi data menjadi dua, yaitu train dan test set. Train set akan digunakan untuk tahapan pelatihan model, sedangkan test set akan digunakan untuk evaluasi model. Hal ini dilakukan agar model yang dihasilkan objektif, dimana model harus menghasilkan prediksi yang akurat dan tidak mengetahui "jawaban" dari data test. Pada tahap ini, dipilih 80% dari keseluruhan data menjadi data pelatihan dan 20% sisanya digunakan untuk evaluasi.
 
 ```python
 # Pisahkan fitur independen (X) dan target (y)
@@ -222,14 +222,24 @@ Test set shape: X_test=(495, 7), y_test=(495,)
 ```
 
 
----------------------
-Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
 
 ## Modeling
+Tujuan utama dari tahap modeling adalah mengoptimalkan kinerja model agar mampu membuat prediksi atau keputusan yang akurat pada data baru yang belum pernah dilihat sebelumnya. Optimalisasi ini umumnya dicapai dengan meminimalkan loss function, yang mengukur seberapa jauh prediksi model menyimpang dari nilai atau label aktual dalam data pelatihan. Selama iterasi pelatihan, model terus-menerus menyesuaikan parameternya berdasarkan gradien fungsi kerugian, bergerak menuju konfigurasi yang paling efisien dalam memprediksi output yang diinginkan.
+
+Pada tahap ini, dibandingkan tiga algoritma machine learning klasik untuk mendapatkan model yang paling baik dan optimal yaitu K-Nearest Neighbor (KNN), Support Vector Machine (SVM), dan Naive Bayes.
+
+1. KNN
+<br>K-Nearest Neighbors (KNN) adalah salah satu algoritma machine learning yang paling sederhana, non-parametrik, dan lazy learning (pembelajar malas) yang utamanya digunakan untuk klasifikasi dan juga bisa untuk regresi. KNN digolongkan sebagai lazy learning karena tidak membangun model secara eksplisit selama fase pelatihan; semua komputasi terjadi ketika ada data baru yang perlu diklasifikasikan atau diprediksi.
+
+2. SVM
+
+
+3. Naive Bayes
+
+
+### Hyperparameter Tuning
+
+----------
 Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
