@@ -311,6 +311,35 @@ Untuk tahapan pemilihan model terbaik, akan dilakukan pada tahap selanjutnya yai
 ## Evaluation
 Pada tahap ini dilakukan evaluasi terhadap model yang telah dibuat. Evaluasi dilakukan dengan membandingkan performa antar model, juga sebelum dan sesudah hyperparameter tuning, berdasarkan beberapa metrik seperti akurasi, precision, recall, F1 score, dan waktu pelatihan.
 
+Untuk memahami metrik-metrik ini, penting untuk mengenal empat istilah dasar dari confusion matrix (matriks kebingungan):
+
+Untuk dapat menghitung metrik akurasi, precision, recall, dan F1 score, terdapat empat istilah yang digunakan dalam mengevaluasi hasil prediksi model yang biasa ditunjukkan dalam bentuk confusion matrix. Keempat istilah tersebut adalah:
+* True Positive (TP): Jumlah kasus positif yang diprediksi dengan benar sebagai positif
+* True Negative (TN): Jumlah kasus negatif yang diprediksi dengan benar sebagai negatif
+* False Positive (FP): Jumlah kasus negatif yang salah diprediksi sebagai positif (Error Tipe I)
+* False Negative (FN): Jumlah kasus positif yang salah diprediksi sebagai negatif (Error Tipe II)
+
+Berdasarkan keempat nilai di atas, akurasi, precision, recall, dan F1 score dihitung dengan cara sebagai berikut:
+1. Akurasi
+<br>Akurasi mengukur proporsi total prediksi yang benar dari semua prediksi yang dibuat. Ini adalah metrik paling intuitif dan memberikan gambaran umum seberapa sering model membuat prediksi yang tepat.
+<br>Formula: Accuracy = (TP + TN) / (TP + TN + FP + FN)
+
+2. Presisi
+<br>Presisi mengukur proporsi positif yang benar dari semua kasus yang diprediksi sebagai positif. Dengan kata lain, dari semua yang diprediksi sebagai kelas positif, berapa banyak yang benar-benar positif. Ini menjawab pertanyaan: "Seberapa banyak prediksi positif saya yang memang benar?"
+<br>Formula: Precision = TP / (TP + FP)
+
+3. Recall (Sensitivitas / Tingkat Keberhasilan)
+<br>Recall mengukur proporsi positif yang teridentifikasi dengan benar dari semua kasus positif aktual. Dengan kata lain, dari semua kasus yang seharusnya positif, berapa banyak yang berhasil ditemukan oleh model. Ini menjawab pertanyaan: "Seberapa banyak kasus positif yang sebenarnya berhasil ditemukan oleh model saya?"
+<br>Formula: Recall = TP / (TP + FN)
+
+4. F1-Score
+<br>F1-Score adalah rata-rata harmonik dari Presisi dan Recall. Ini memberikan skor tunggal yang menyeimbangkan Presisi dan Recall. F1-Score tinggi menunjukkan bahwa model memiliki Presisi dan Recall yang baik secara bersamaan.
+<br>Formula: F1_Score = 2 ∗ (Precision ∗ Recall) / (Precision + Recall)
+
+Selain keempat metrik di atas, dilakukan juga perhitungan training time untuk mengukur skalabilitas model pada data yang lebih besar dan algoritma yang lebih kompleks.
+5. Training Time
+<br>Training time adalah waktu yang dibutuhkan model untuk melakukan pelatihan. 
+<br>Formula: Training time = start training time - end training time
 
 
 
