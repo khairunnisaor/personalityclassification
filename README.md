@@ -153,7 +153,7 @@ Data columns (total 8 columns):
 dtypes: int64(7), object(1)
 memory usage: 173.7+ KB
 ```
-Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation.
+Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation. Dari informasi ini juga diketahui bahwa selutuh fitur independen telah memiliki tipe data integer, dimana tidak diperlukan lagi konversi kategorikal data menjadi numerikal di tahap data preparation.
 
 ### Exploratory Data Analysis
 Untuk mengetahui persebaran dan behavior dari data, dilakukan beberapa hal yaitu:
@@ -171,9 +171,9 @@ Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisi
 Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
 
 Hal ini juga terlihat jelas pada correlation analisis di bawah. Terdapat tiga nilai yang dapat diketahui dari correlation table, yaitu:
-* nilai negatif: Semakin nilai antar dua variabel mendekati -1, artinya kedua variabel tersebut berkorelasi negatif atau terbalik.
-* nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
-* nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
+* Nilai negatif: Semakin nilai antar dua variabel mendekati -1, artinya kedua variabel tersebut berkorelasi negatif atau terbalik.
+* Nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
+* Nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
 
 ![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/corr.png)
 
@@ -182,6 +182,47 @@ Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, d
 
 
 ## Data Preparation
+Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
+
+1. Standarisasi atau Normalisasi Fitur
+Pada tahapan ini, dilakukan penyeragaman atau standarisasi skala variabel independen agar seluruh fitur memiliki nilai minimal dan nilai maksimal yang sama, sehingga tidak ada data yang terlalu tinggi atau terlalu rendah nilainya. Tahapan ini adalah langkah yang krusial dalam membangun model machine learning, karena tanpa fitur yang terstandarisasi, model akan susah mempelajari kesamaan pola yang ada dalam data.
+
+```python
+# Memastikan hanya data dengan tipe numerikal yang akan diproses
+numeric_features = df_data.select_dtypes(include=['number']).columns
+numeric_features
+
+# Standardisasi fitur numerik
+scaler = StandardScaler()
+df_data[numeric_features] = scaler.fit_transform(df_data[numeric_features])
+```
+
+2. Data Splitting
+Setelah memastikan bahwa fitur independen berada dalam skala yang serupa, dilakukan langkah terakhir sebelum melatih model machine learning, yaitu data splitting. Tahapan ini dilakukan untuk membagi data menjadi dua, yaitu train dan test set. Train set akan digunakan untuk tahapan pelatihan model, sedangkan test set akan digunakan untuk evaluasi model. Hal ini dilakukan agar model yang dihasilkan objektif, dimana model harus menghasilkan prediksi yang akurat dan tidak mengetahui "jawaban" dari data test. Pada tahap ini, dipilih 80% dari keseluruhan data menjadi data pelatihan dan 20% sisanya digunakan untuk evaluasi.
+
+```python
+# Pisahkan fitur independen (X) dan target (y)
+X = df_data.drop(columns=['Personality'])
+y = df_data['Personality']
+
+# Encode target (y), mengubah data target dari kategorikal atau format string menjadi numerik
+y = LabelEncoder().fit_transform(y)
+
+# Split data menjadi set pelatihan dan set uji
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Tampilkan bentuk set pelatihan dan set uji untuk memastikan split
+print(f"Training set shape: X_train={X_train.shape}, y_train={y_train.shape}")
+print(f"Test set shape: X_test={X_test.shape}, y_test={y_test.shape}")
+```
+Output:
+```
+Training set shape: X_train=(1976, 7), y_train=(1976,)
+Test set shape: X_test=(495, 7), y_test=(495,)
+```
+
+
+---------------------
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
