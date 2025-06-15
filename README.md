@@ -222,32 +222,101 @@ Test set shape: X_test=(495, 7), y_test=(495,)
 ```
 
 
-
 ## Modeling
 Tujuan utama dari tahap modeling adalah mengoptimalkan kinerja model agar mampu membuat prediksi atau keputusan yang akurat pada data baru yang belum pernah dilihat sebelumnya. Optimalisasi ini umumnya dicapai dengan meminimalkan loss function, yang mengukur seberapa jauh prediksi model menyimpang dari nilai atau label aktual dalam data pelatihan. Selama iterasi pelatihan, model terus-menerus menyesuaikan parameternya berdasarkan gradien fungsi kerugian, bergerak menuju konfigurasi yang paling efisien dalam memprediksi output yang diinginkan.
 
-Pada tahap ini, dibandingkan tiga algoritma machine learning klasik untuk mendapatkan model yang paling baik dan optimal yaitu K-Nearest Neighbor (KNN), Support Vector Machine (SVM), dan Naive Bayes.
+Pada tahap ini, dibandingkan tiga algoritma machine learning klasik untuk mendapatkan model yang paling baik dan optimal yaitu K-Nearest Neighbor (KNN), Support Vector Machine (SVM), dan Naive Bayes. Parameter yang digunakan pada pembangunan model baseline adalah parameter default, yang kemudian akan dioptimalisasi pada tahap hyperparameter tuning.
 
 1. KNN
-<br>K-Nearest Neighbors (KNN) adalah salah satu algoritma machine learning yang paling sederhana, non-parametrik, dan lazy learning (pembelajar malas) yang utamanya digunakan untuk klasifikasi dan juga bisa untuk regresi. KNN digolongkan sebagai lazy learning karena tidak membangun model secara eksplisit selama fase pelatihan; semua komputasi terjadi ketika ada data baru yang perlu diklasifikasikan atau diprediksi.
+<br>K-Nearest Neighbors adalah salah satu algoritma machine learning yang paling sederhana, non-parametrik, dan lazy learning (pembelajar malas) yang utamanya digunakan untuk klasifikasi dan juga bisa untuk regresi. KNN digolongkan sebagai lazy learning karena tidak membangun model secara eksplisit selama fase pelatihan; semua komputasi terjadi ketika ada data baru yang perlu diklasifikasikan atau diprediksi.
 
 2. SVM
-
+<br>Support Vector Machine adalah algoritma machine learning yang kuat dan serbaguna, utamanya digunakan untuk tugas klasifikasi dan juga bisa untuk regresi. SVM bekerja dengan menemukan hyperplane (bidang pemisah) optimal dalam ruang berdimensi tinggi yang secara jelas memisahkan titik-titik data dari berbagai kelas. Ide inti di balik SVM adalah menemukan "batas" terbaik yang memisahkan kelas-kelas dalam data.
 
 3. Naive Bayes
+<br>Naive Bayes adalah algoritma klasifikasi probabilistik yang didasarkan pada Teorema Bayes dengan asumsi "naif" (sederhana) tentang independensi antar fitur. Meskipun asumsi ini seringkali tidak sepenuhnya realistis di dunia nyata, Naive Bayes seringkali menunjukkan kinerja yang sangat baik dalam berbagai aplikasi klasifikasi, terutama dalam klasifikasi teks. Inti dari algoritma Naive Bayes adalah Teorema Bayes, yang secara matematis menggambarkan probabilitas suatu peristiwa, berdasarkan pengetahuan sebelumnya tentang kondisi yang mungkin terkait dengan peristiwa tersebut.
+
+Pembangunan model baseline dilakukan sebagai berikut.
+```python
+# Bagian 1: Pelatihan Model
+knn = KNeighborsClassifier().fit(X_train, y_train)
+svm = SVC().fit(X_train, y_train)
+nb = BernoulliNB().fit(X_train, y_train)
+
+print("Model training selesai.")
+```
+
+Kelebihan dan kekurangan dari ketiga algoritma di atas adalah sebagai berikut:
+| Algoritma        | Kelebihan | Kekurangan |
+| ---------------- | --------- | ---------- |
+| KNN | Sederhana dan mudah dipahami, fleksibel untuk berbagai distribusi data, mudah dalam penambahan data baru | Biaya komputasi tinggi saat prediksi, sensitif terhadap noise dan outlier, kurang efektif pada data dimensi tinggi  |
+| SVM | Efektif pada ruang berdimensi tinggi, memiliki generalisasi yang baik, efisiensi memori | Membutuhkan waktu pelatihan yang lama pada dataset besar, sensitif terhadap pemilihan kernel dan hyperparameter, sulit diinterpretasikan |
+| Naive Bayes | Sederhana dan mudah diimplementasikan, sangat cepat dalam pelatihan dan prediksi, dapat menangani data kategorikan dan numerik | Asumsi fitur independen yang 'naif', estimasi probalitias yang tidak akurat, tidak bisa belajar interaksi antar fitur |
 
 
 ### Hyperparameter Tuning
+Untuk mendapatkan model dengan performa terbaik, dilakukan hyperparameter tuning. Tahapan ini adalah langkah yang dilakukan untuk mendapatkan kombinasi parameter terbaik untuk menghasilkan model yang paling optimal. Pada tahap ini, dilakukan proses pencarian hyperparameter dengan menggunakan Grid Search.
 
-----------
-Tahapan ini membahas mengenai model machine learning yang digunakan untuk menyelesaikan permasalahan. Anda perlu menjelaskan tahapan dan parameter yang digunakan pada proses pemodelan.
+```python
+# Membuat fungsi untuk melakukan model tuning
+def model_tuning(X_train, y_train, X_test, y_test, estimator, param_grid):
+    # Inisialisasi GridSearchCV
+    grid_search = GridSearchCV(estimator=estimator, param_grid=param_grid, cv=3, n_jobs=-1, verbose=2)
+    grid_search.fit(X_train, y_train)
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan kelebihan dan kekurangan dari setiap algoritma yang digunakan.
-- Jika menggunakan satu algoritma pada solution statement, lakukan proses improvement terhadap model dengan hyperparameter tuning. **Jelaskan proses improvement yang dilakukan**.
-- Jika menggunakan dua atau lebih algoritma pada solution statement, maka pilih model terbaik sebagai solusi. **Jelaskan mengapa memilih model tersebut sebagai model terbaik**.
+    # Output hasil terbaik
+    print(f"Best parameters (Grid Search): {grid_search.best_params_}")
+    best_grid = grid_search.best_estimator_
+
+    # Evaluasi performa model pada test set
+    grid_search_score = best_grid.score(X_test, y_test)
+    print(f"Accuracy after Grid Search: {grid_search_score:.4f}")
+
+    return best_grid, round(grid_search_score, 4)
+```
+
+Fungsi di atas kemudian digunakan untuk melakukan model tuning pada ketiga algoritma. Berikut ditampilkan contoh penggunaan fungsi tuning pada algoritma KNN.
+```python
+# Definisikan parameter grid untuk Grid Search (contoh untuk KNN)
+param_grid_knn = {'n_neighbors': [1,10, 1],
+                  'leaf_size': [20,40,1],
+                  'p': [1,2],
+                  'weights': ['uniform', 'distance'],
+                  'metric': ['minkowski', 'chebyshev']}
+
+best_param_knn, best_score_knn = model_tuning(X_train, y_train, X_test, y_test, knn, param_grid_knn)
+tuning_summary.append(["KNN", best_score_knn])
+```
+
+Hyperparameter terbaik yang didapatkan dari eksperimen menggunakan Grid Search untuk setiap algoritma adalah sebagai berikut:
+1. KNN
+* leaf_size (ambang batas jumlah sampel dalam daun pohon pencarian): 20
+* metric (perhitungan jarak yang digunakan): minkowski
+* n_neighbors (jumlah tetangga terdekat yang diperhitungkan): 10
+* p (power parameter untuk minkowski): 2
+* weights (pembobotan untuk setiap tetangga terdekat): uniform
+
+2. SVM
+* C (toleransi model terhadap misclassification): 0.001
+* gamma (spengaruh satu sampel data pelatihan tunggal terhadap batas keputusan): 1000
+* kernel (fungsi untuk memetakan data input ke ruang dimensi yang lebih tinggi): sigmoid
+
+3. Naive Bayes
+* alpha (nilai Laplace/Lidstone smoothing): 0.001
+* binarize (ambang batas konversi fitur numerik): 0.0
+* fit_prior (penggunaan probabilitas prior kelas): True
+
+Untuk tahapan pemilihan model terbaik, akan dilakukan pada tahap selanjutnya yaitu evaluasi.
 
 ## Evaluation
+Pada tahap ini dilakukan evaluasi terhadap model yang telah dibuat. Evaluasi dilakukan dengan membandingkan performa antar model, juga sebelum dan sesudah hyperparameter tuning, berdasarkan beberapa metrik seperti akurasi, precision, recall, F1 score, dan waktu pelatihan.
+
+
+
+
+
+
+--------------------------------
 Pada bagian ini anda perlu menyebutkan metrik evaluasi yang digunakan. Lalu anda perlu menjelaskan hasil proyek berdasarkan metrik evaluasi yang digunakan.
 
 Sebagai contoh, Anda memiih kasus klasifikasi dan menggunakan metrik **akurasi, precision, recall, dan F1 score**. Jelaskan mengenai beberapa hal berikut:
@@ -259,9 +328,4 @@ Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, probl
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
 
-**---Ini adalah bagian akhir laporan---**
-
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
 
