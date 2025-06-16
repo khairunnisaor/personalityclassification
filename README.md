@@ -52,7 +52,61 @@ Interaksi Sosial
 Variabel Target
 - Personality: Identifikasi kepribadian (Extrovert/Introvert).
 
-### Mengecek Kondisi dan Eksplorasi Data
+
+### Exploratory Data Analysis
+Untuk mengetahui informasi tentang statistik dataset secara umum, distribusi, dan karakteristik dari data, dilakukan beberapa hal yaitu:
+
+1. Menampilkan informasi dataset
+```python
+df_personality.info()
+```
+
+Output:
+```
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 2900 entries, 0 to 2899
+Data columns (total 8 columns):
+ #   Column                     Non-Null Count  Dtype  
+---  ------                     --------------  -----  
+ 0   Time_spent_Alone           2837 non-null   float64
+ 1   Stage_fear                 2827 non-null   object 
+ 2   Social_event_attendance    2838 non-null   float64
+ 3   Going_outside              2834 non-null   float64
+ 4   Drained_after_socializing  2848 non-null   object 
+ 5   Friends_circle_size        2823 non-null   float64
+ 6   Post_frequency             2835 non-null   float64
+ 7   Personality                2900 non-null   object 
+dtypes: float64(5), object(3)
+memory usage: 181.4+ KB
+```
+Secara umum, diketahui bahwa terdapat 2.900 baris data dengan hampir semua kolom memiliki missing value. Selain variabel target `Personality`, terdapat dua kolom yang bertipe kategorikal: `Stage_fear` dan `Drained_after_socializing`. Hal ini mengindikasikan perlu dilakukannya missing value handling dan categorical data encoding pada tahap data preparation.
+
+2. Analisis Distribusi
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/distribution_updated.png)
+Diagram batang di atas menggambarkan distribusi data pada setiap kolom. Hampir seluruh distribusi variabel memiliki kecenderungan miring ke kanan (right-skewed), dimana lebih banyak nilai mendekati minimal. Sedangkan, saat dibandingkan frekuensi variabel target yang ditunjukkan pada grafik di bawah, hasilnya adalah lebih banyak data dengan label extrovert, walaupun ketidakseimbangannya tidak terlalu signifikan.
+
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/count_target.png)
+
+3. Analisis Bivariate
+<br>Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/bivariate.png)
+
+Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
+
+Hal ini juga terlihat jelas pada correlation analisis di bawah. Terdapat tiga nilai yang dapat diketahui dari correlation table, yaitu:
+* Nilai negatif: Semakin nilai antar dua variabel mendekati -1, artinya kedua variabel tersebut berkorelasi negatif atau terbalik.
+* Nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
+* Nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
+
+![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/corr.png)
+
+Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, dan `drained after socializing` memiliki korelasi yang positif satu sama lain, namun berkorelasi sangat negatif dengan variabel sisanya.
+
+
+
+## Data Preparation
+Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan penanganan nilai yang hilang, penghapusan data yang terduplikat, dan pengecekan Outlier. Setelah penanganan untuk menghasilkan data yang bersih dan siap digunakan ini selesai, dilanjutkan dengan tahap transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
+
 1. Pengecekan dan Pengisian Nilai yang Hilang (missing values)
 ```python
 # Memeriksa jumlah nilai yang hilang di setiap kolom
@@ -153,36 +207,9 @@ Data columns (total 8 columns):
 dtypes: int64(7), object(1)
 memory usage: 173.7+ KB
 ```
-Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation. Dari informasi ini juga diketahui bahwa selutuh fitur independen telah memiliki tipe data integer, dimana tidak diperlukan lagi konversi kategorikal data menjadi numerikal di tahap data preparation.
+Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation. Dari informasi ini juga diketahui bahwa selutuh fitur independen telah memiliki tipe data integer, dimana tidak diperlukan lagi konversi kategorikal data menjadi numerikal.
 
-### Exploratory Data Analysis
-Untuk mengetahui persebaran dan behavior dari data, dilakukan beberapa hal yaitu:
-
-1. Analisis Distribusi
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/distribution_updated.png)
-Diagram batang di atas menggambarkan distribusi data pada setiap kolom. Hampir seluruh distribusi variabel memiliki kecenderungan miring ke kanan (right-skewed), dimana lebih banyak nilai mendekati minimal. Sedangkan, saat dibandingkan frekuensi variabel target yang ditunjukkan pada grafik di bawah, hasilnya adalah lebih banyak data dengan label extrovert, walaupun ketidakseimbangannya tidak terlalu signifikan.
-
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/count_target.png)
-
-3. Analisis Bivariate
-<br>Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/bivariate.png)
-
-Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
-
-Hal ini juga terlihat jelas pada correlation analisis di bawah. Terdapat tiga nilai yang dapat diketahui dari correlation table, yaitu:
-* Nilai negatif: Semakin nilai antar dua variabel mendekati -1, artinya kedua variabel tersebut berkorelasi negatif atau terbalik.
-* Nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
-* Nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
-
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/corr.png)
-
-Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, dan `drained after socializing` memiliki korelasi yang positif satu sama lain, namun berkorelasi sangat negatif dengan variabel sisanya.
-
-
-
-## Data Preparation
-Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
+Setelah data sudah bersih dan lengkap, dilanjutkan dengan dua tahapan, yaitu standarisasi fitur dan data splitting agar dapat diproses dengan model machine learning dengan mudah.
 
 1. Standarisasi atau Normalisasi Fitur
 <br>Pada tahapan ini, dilakukan penyeragaman atau standarisasi skala variabel independen agar seluruh fitur memiliki nilai minimal dan nilai maksimal yang sama, sehingga tidak ada data yang terlalu tinggi atau terlalu rendah nilainya. Tahapan ini adalah langkah yang krusial dalam membangun model machine learning, karena tanpa fitur yang terstandarisasi, model akan susah mempelajari kesamaan pola yang ada dalam data.
