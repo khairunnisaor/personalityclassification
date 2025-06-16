@@ -86,7 +86,7 @@ Output:
 Baris duplikat:
 [429 rows x 8 columns]
 ```
-Berdasarkan pengecekan di atas, diketahui bahwa terdapat 429 baris yang terduplikat. Hal ini akan ditangani lebih lanjut pada tahap Data Preparation.
+Diketahui bahwa terdapat 429 baris yang terduplikat. Hal ini akan ditangani lebih lanjut pada tahap Data Preparation.
 
 3. Pengecekan Outlier
 ```python
@@ -180,8 +180,7 @@ Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, d
 Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan penanganan nilai yang hilang, penghapusan data yang terduplikat, dan pengecekan Outlier. Setelah penanganan untuk menghasilkan data yang bersih dan siap digunakan ini selesai, dilanjutkan dengan tahap transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
 
 1. Pengisian Nilai yang Hilang (missing values)
-Dari tahap Data Understanding, diketahui terdapat beberapa kolom yang memiliki missing values. Berikut merupakan langkah yang dilakukan untuk menangani hal ini.
-
+<br>Dari tahap Data Understanding, diketahui terdapat beberapa kolom yang memiliki missing values. Berikut merupakan langkah yang dilakukan untuk menangani hal ini.
 ```python
 # Membuat fungsi pengisian nilai hilang menggunakan KNNImputer, untuk mengisi data hilang berdasarkan tetangga terdekatnya
 def imputeMissingValues(df, col):
@@ -194,7 +193,7 @@ df_personality[['Stage_fear','Drained_after_socializing']] = df_personality[['St
                                                                   lambda series: pd.Series(
                                                                         LabelEncoder().fit_transform(series[series.notnull()]),
                                                                         index=series[series.notnull()].index)
-                                                               )
+                                                             )
 # Melakukan imputasi untuk mengisi nilai yang hilang
 df_personality['Time_spent_Alone'] = imputeMissingValues(df_personality, 'Time_spent_Alone')
 df_personality['Social_event_attendance'] = imputeMissingValues(df_personality, 'Social_event_attendance')
@@ -206,7 +205,7 @@ df_personality['Stage_fear'] = imputeMissingValues(df_personality, 'Stage_fear')
 df_personality['Drained_after_socializing'] = imputeMissingValues(df_personality, 'Drained_after_socializing')
 ```
 
-2. Pengecekan Data Duplikat
+2. Penanganan Data Duplikat
 Berdasarkan pengecekan di tahap Data Understanding, diketahui bahwa terdapat 429 baris yang terduplikat. Oleh karena itu, dilakukan penghapusan baris yang redundan tersebut.
 ```python
 df_personality = df_personality.drop_duplicates()
