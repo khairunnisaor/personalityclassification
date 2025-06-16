@@ -33,7 +33,7 @@ Referensi: Sari, N. P., Widodo, T., & Putra, K. A. (2020). Classification Algori
 Dataset ini berisi tentang data perilaku seseorang yang menggambarkan apakah individu tersebut memiliki kepribadian yang introvert atau extrovert. Berdasarkan data perilaku invidu yang kuantitatif, dataset ini dapat menjadi sumber daya yang berharga untuk psikolog dan peneliti dalam mempelajari dan mengeksplorasi bagaimana perilaku sosial dapat dieksplorasi untuk mengidentifikasi spektrum kepribadian manusia.
 
 Dataset ini terdiri dari 7 jenis kebiasaan dari 2.900 responden tentang kondisi mental dan cara mereka berinteraksi sosial, yang diukur dalam skala yang telah ditentukan.
-Sumber dataset: [Extrovert vs. Introvert Behavior Data] (https://www.kaggle.com/datasets/rakeshkapilavai/extrovert-vs-introvert-behavior-data)
+Sumber dataset: [Extrovert vs. Introvert Behavior Data](https://www.kaggle.com/datasets/rakeshkapilavai/extrovert-vs-introvert-behavior-data)
 
 Beberapa kegunaan dataset: Membuat model machine learning untuk prediksi kepribadian, menganalisa korelasi antara perilaku sosial dan kepribadian, membuat visualisasi tentang tren kebiasaan atau perilaku sosial individu, dan lain-lain.
 
