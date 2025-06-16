@@ -351,7 +351,7 @@ Berdasarkan metrik di atas, didapatkan hasil eksperimen baseline model dengan pa
 Lalu, dilakukan hyperparameter tuning dan hasil eksperimen dengan best parameter beserta waktu pelatihannya sebagai berikut:
 | Model             | Akurasi | Precision | Recall | F1-Score | Training Time (s) |
 | ----------------- | ------- | --------- | ------ | -------- | ----------------- |
-| Tuned-KNN         | 91.72   | 92.00     | 91.75  | 91.75    | 0.004474          | 
+| Tuned-KNN         | 91.72   | 92.00     | 91.72  | 91.75    | 0.004474          | 
 | Tuned-SVM         | 92.53   | 92.80     | 92.53  | 92.55    | 0.083815          | 
 | Tuned-NaiveBayes  | 92.32   | 92.57     | 92.32  | 92.35    | 0.003291          | 
 
