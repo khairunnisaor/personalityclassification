@@ -52,6 +52,75 @@ Interaksi Sosial
 Variabel Target
 - Personality: Identifikasi kepribadian (Extrovert/Introvert).
 
+### Pengecekan Kondisi Dataset
+Pada tahap ini dilakukan pemahaman tentang kelengkapan dataset secara umum. Hal ini dilakukan dengan:
+
+1. Pengecekan Nilai yang Hilang (missing values)
+```python
+# Memeriksa jumlah nilai yang hilang di setiap kolom
+missing_values = df_personality.isnull().sum()
+missing_values[missing_values > 0]
+```
+| Variabel        | Jumlah Nilai Hilang |
+| --------------- |:-------------------:|
+| Time_spent_Alone | 63 |
+| Stage_fear | 73 |
+| Social_event_attendance | 62 |
+| Going_outside | 66 |
+| Drained_after_socializing | 52 |
+| Friends_circle_size | 77 |
+| Post_frequency | 65 |
+
+Hampir semua kolom memiliki data yang hilang. Hal ini akan ditangani lebih lanjut pada tahap Data Preparation.
+
+2. Pengecekan Data Duplikat
+```python
+# Mengidentifikasi baris duplikat
+duplicates = df_personality.duplicated()
+
+print("Baris duplikat:")
+print(df_personality[duplicates])
+```
+Output:
+```
+Baris duplikat:
+[429 rows x 8 columns]
+```
+Berdasarkan pengecekan di atas, diketahui bahwa terdapat 429 baris yang terduplikat. Hal ini akan ditangani lebih lanjut pada tahap Data Preparation.
+
+3. Pengecekan Outlier
+```python
+def outlier_check(df, col):
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    outliers_iqr = df[(df[col] < lower_bound) | (df[col] > upper_bound)]
+    print(f"{col}: {len(outliers_iqr)}")
+
+numeric_features = df_personality[df_personality.columns].select_dtypes(include=['number']).columns
+
+print("Jumlah outlier yang ditemukan pada setiap kolom:")
+for col in df_personality[numeric_features]:
+    outlier_check(df_personality, col)
+```
+Output:
+```
+Jumlah outlier yang ditemukan pada setiap kolom:
+Time_spent_Alone: 0
+Stage_fear: 0
+Social_event_attendance: 0
+Going_outside: 0
+Drained_after_socializing: 0
+Friends_circle_size: 0
+Post_frequency: 0
+```
+Tidak ditemukan outlier pada dataset ini, sehingga tidak diperlukan penanganan atau penghapusan outlier.
+
+
 
 ### Exploratory Data Analysis
 Untuk mengetahui informasi tentang statistik dataset secara umum, distribusi, dan karakteristik dari data, dilakukan beberapa hal yaitu:
@@ -82,14 +151,16 @@ memory usage: 181.4+ KB
 Secara umum, diketahui bahwa terdapat 2.900 baris data dengan hampir semua kolom memiliki missing value. Selain variabel target `Personality`, terdapat dua kolom yang bertipe kategorikal: `Stage_fear` dan `Drained_after_socializing`. Hal ini mengindikasikan perlu dilakukannya missing value handling dan categorical data encoding pada tahap data preparation.
 
 2. Analisis Distribusi
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/distribution_updated.png)
+![distribution_updated](https://github.com/user-attachments/assets/b20018aa-11a4-469d-8ca3-7302b1952bf5)
 Diagram batang di atas menggambarkan distribusi data pada setiap kolom. Hampir seluruh distribusi variabel memiliki kecenderungan miring ke kanan (right-skewed), dimana lebih banyak nilai mendekati minimal. Sedangkan, saat dibandingkan frekuensi variabel target yang ditunjukkan pada grafik di bawah, hasilnya adalah lebih banyak data dengan label extrovert, walaupun ketidakseimbangannya tidak terlalu signifikan.
 
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/count_target.png)
+![count_target](https://github.com/user-attachments/assets/e89cab4d-c31a-4a00-a810-2609fff8e7aa)
+
 
 3. Analisis Bivariate
 <br>Untuk mengetahui hubungan setiap fitur dengan variabel target, dilakukan analisis bivariate dimana setiap fitur dikelompokkan berdasarkan nilai variabel targetnya dan dirata-rata.
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/bivariate.png)
+![bivariate](https://github.com/user-attachments/assets/20518a66-14a7-4eb0-88a3-dc0073a62d63)
+
 
 Berdasarkan diagram batang di atas, dapat diketahui bahwa variabel `time spent alone`, `stage fear`, dan `drained after socializing` berkaitan erat dengan kepribadian Introvert. Sedangkan sisa variabel lainnya berkaitan erat dengan kepribadian extrovert.
 
@@ -98,7 +169,8 @@ Hal ini juga terlihat jelas pada correlation analisis di bawah. Terdapat tiga ni
 * Nilai positif: Semakin nilai antar dua variabel mendekati +1, artinya kedua variabel tersebut berkorelasi positif atau searah.
 * Nilai nol: Jika nilai antar dua variabel cenderung mendekati nol, artinya kedua variabel tersebut saling tidak berkorelasi.
 
-![alt text](https://github.com/khairunnisaor/personalityclassification/blob/main/images/corr.png)
+![corr](https://github.com/user-attachments/assets/d5d0863b-acb4-4b36-a23e-23bfb2f54024)
+
 
 Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, dan `drained after socializing` memiliki korelasi yang positif satu sama lain, namun berkorelasi sangat negatif dengan variabel sisanya.
 
@@ -107,21 +179,8 @@ Pada tabel korelasi ini, dapat dilihat bahwa `time spent alone`, `stage fear`, d
 ## Data Preparation
 Setelah memahami data yang akan digunakan untuk melatih model machine learning dengan baik, selanjutnya adalah data preparation. Pada tahap ini dilakukan penanganan nilai yang hilang, penghapusan data yang terduplikat, dan pengecekan Outlier. Setelah penanganan untuk menghasilkan data yang bersih dan siap digunakan ini selesai, dilanjutkan dengan tahap transformasi dan pembagian data agar sesuai dengan input yang dibutuhkan untuk proses training. Beberapa tahapan yang dilakukan yaitu:
 
-1. Pengecekan dan Pengisian Nilai yang Hilang (missing values)
-```python
-# Memeriksa jumlah nilai yang hilang di setiap kolom
-missing_values = df_personality.isnull().sum()
-missing_values[missing_values > 0]
-```
-| Variabel        | Jumlah Nilai Hilang |
-| --------------- |:-------------------:|
-| Time_spent_Alone | 63 |
-| Stage_fear | 73 |
-| Social_event_attendance | 62 |
-| Going_outside | 66 |
-| Drained_after_socializing | 52 |
-| Friends_circle_size | 77 |
-| Post_frequency | 65 |
+1. Pengisian Nilai yang Hilang (missing values)
+Dari tahap Data Understanding, diketahui terdapat beberapa kolom yang memiliki missing values. Berikut merupakan langkah yang dilakukan untuk menangani hal ini.
 
 ```python
 # Membuat fungsi pengisian nilai hilang menggunakan KNNImputer, untuk mengisi data hilang berdasarkan tetangga terdekatnya
@@ -148,44 +207,12 @@ df_personality['Drained_after_socializing'] = imputeMissingValues(df_personality
 ```
 
 2. Pengecekan Data Duplikat
-```python
-# Mengidentifikasi baris duplikat
-duplicates = df_personality.duplicated()
-
-print("Baris duplikat:")
-print(df_personality[duplicates])
-```
-Output:
-```
-Baris duplikat:
-[429 rows x 8 columns]
-```
-Berdasarkan pengecekan di atas, diketahui bahwa terdapat 429 baris yang terduplikat. Oleh karena itu, dilakukan penghapusan baris yang redundan tersebut.
-
+Berdasarkan pengecekan di tahap Data Understanding, diketahui bahwa terdapat 429 baris yang terduplikat. Oleh karena itu, dilakukan penghapusan baris yang redundan tersebut.
 ```python
 df_personality = df_personality.drop_duplicates()
 ```
 
-3. Pengecekan Outlier
-```python
-numeric_features = df_personality[df_personality.columns].select_dtypes(include=['number']).columns
-
-# Mengidentifikasi outliers menggunakan IQR
-Q1 = df_personality[numeric_features].quantile(0.25)
-Q3 = df_personality[numeric_features].quantile(0.75)
-IQR = Q3 - Q1
-
-# Menghapus Outlier sesuai perhitungan Kuartil
-# Filter dataframe untuk hanya menyimpan baris yang tidak mengandung outliers pada kolom numerik
-condition = ~((df_personality[numeric_features] < (Q1 - 1.5*IQR)) | (df_personality[numeric_features] > (Q3 + 1.5*IQR))).any(axis=1)
-df_filtered_numeric = df_personality.loc[condition, numeric_features]
-
-# Menggabungkan kembali dengan kolom kategorikal
-categorical_features = df_personality.select_dtypes(include=['object']).columns
-df_personality = pd.concat([df_filtered_numeric, df_personality.loc[condition, categorical_features]], axis=1)
-```
-
-4. Menampilkan informasi rangkuman data secara umum.
+3. Menampilkan informasi rangkuman data secara umum.
 ```python
 df_personality.info()
 ```
@@ -207,7 +234,7 @@ Data columns (total 8 columns):
 dtypes: int64(7), object(1)
 memory usage: 173.7+ KB
 ```
-Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat dan outlier. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation. Dari informasi ini juga diketahui bahwa selutuh fitur independen telah memiliki tipe data integer, dimana tidak diperlukan lagi konversi kategorikal data menjadi numerikal.
+Dari informasi keseluruhan di atas dapat diketahui jumlah baris data setelah penghapusan data duplikat. Dari 2.900 baris, data bersih tersisa 2.471 dan sudah tidak ada kolom yang memiliki missing values karena telah dilakukan imputation. Dari informasi ini juga diketahui bahwa selutuh fitur independen telah memiliki tipe data integer, dimana tidak diperlukan lagi konversi kategorikal data menjadi numerikal.
 
 Setelah data sudah bersih dan lengkap, dilanjutkan dengan dua tahapan, yaitu standarisasi fitur dan data splitting agar dapat diproses dengan model machine learning dengan mudah.
 
